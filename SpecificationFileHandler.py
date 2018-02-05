@@ -9,8 +9,10 @@ LOG = logging.getLogger(__name__)
 
 class SpecificationFileHandler(FileSystemEventHandler):
     """
-        Takes specification file created events dispatched by the
-        observer and processes those events.
+        Takes specification file 'created' events dispatched by the
+        observer and processes those events, adding a new record in the
+        specification_formats table and adding its corresponding columns in the
+        specification_format_columns table
     """
     patterns = ["*.csv"]
 

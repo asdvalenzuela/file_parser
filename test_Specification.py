@@ -1,11 +1,11 @@
-from FilesDB import FilesDB
+from FilesDBWrapper import FilesDBWrapper
 from mock import patch
 from Specification import Specification
 from Specification import SpecificationException
 
-import unittest
-import testing.postgresql
 import psycopg2
+import testing.postgresql
+import unittest
 
 
 def handler(postgresql):
@@ -49,7 +49,7 @@ class SpecificationTest(unittest.TestCase):
         self.postgresql = Postgresql()
 
         file_name = 'fileformat1'
-        self.db = FilesDB(test=True)
+        self.db = FilesDBWrapper(test=True)
         self.db._connection = psycopg2.connect(**self.postgresql.dsn())
         self.spec = Specification(file_name, self.db)
 

@@ -6,7 +6,7 @@ This project takes in specification files data files described [here](https://gi
 
 This project uses Postgres as its datastore, and requires installation and setup before running the project.
 
-To install Postgres on a Mac, please follow this [setup guide](https://gist.github.com/sgnl/609557ebacd3378f3b72)
+To install Postgres on a Mac, please follow this [setup guide](https://gist.github.com/sgnl/609557ebacd3378f3b72).
 
 Once Postgres is running on your machine, you'll need to create the tables necessary for this project:
 
@@ -40,6 +40,7 @@ python run_file_parser.py
 ```
 
 Drop a specification file into the spec directory or a data file into the data directory to see the file parser in action.
+A specification file should be added before any corresponding data files.
 
 # Run the tests
 

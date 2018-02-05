@@ -1,4 +1,5 @@
-import psycopg2
+from psycopg2 import DatabaseError
+
 import logging
 
 LOG = logging.getLogger(__name__)
@@ -62,16 +63,16 @@ class Specification(object):
                  spec_name = %s;"""
         try:
             self.spec_id = self.db.query_and_get_id(sql, (self.file_name,))
-        except (Exception, psycopg2.DatabaseError) as error:
-            LOG.error(error)
+        except DatabaseError as error:
+            LOG.info('_get_specification_id ' + str(error))
 
     def _get_specification_columns(self):
         sql = """SELECT * FROM specification_format_columns WHERE
                  spec_id = %s;"""
         try:
             self.columns = self.db.query_all(sql, (self.spec_id,))
-        except (Exception, psycopg2.DatabaseError) as error:
-            LOG.error(error)
+        except DatabaseError as error:
+            LOG.error('_get_specification_columns ' + str(error))
 
     def _insert_specification_format(self):
         sql = """INSERT INTO specification_formats(spec_name)
@@ -79,8 +80,8 @@ class Specification(object):
 
         try:
             self.spec_id = self.db.query_and_get_id(sql, (self.file_name,))
-        except (Exception, psycopg2.DatabaseError) as error:
-            LOG.error(error)
+        except DatabaseError as error:
+            LOG.error('_insert_specification_format ' + str(error))
 
     def _insert_specification_column(self, name, width, data_type):
         sql = """INSERT INTO specification_format_columns(spec_id, column_name,
@@ -88,5 +89,5 @@ class Specification(object):
 
         try:
             self.db.query(sql, (self.spec_id, name, width, data_type))
-        except (Exception, psycopg2.DatabaseError) as error:
-            LOG.error(error)
+        except DatabaseError as error:
+            LOG.error('_insert_specification_column ' + str(error))

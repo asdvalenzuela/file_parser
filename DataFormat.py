@@ -44,7 +44,7 @@ class DataFormat(object):
         try:
             self.db.query_given_table(query_string, self.spec.file_name)
             return True
-        except (Exception, psycopg2.DatabaseError):
+        except psycopg2.DatabaseError:
             return False
 
     def _create_data_format_table(self):
@@ -58,7 +58,7 @@ class DataFormat(object):
 
             try:
                 self.db.create(create_string, self.spec.file_name)
-            except (Exception, psycopg2.DatabaseError) as error:
+            except psycopg2.DatabaseError as error:
                 raise DataFormatException(error)
 
         else:
@@ -75,7 +75,7 @@ class DataFormat(object):
                 self.spec.columns)
 
             # for each line, extract the values to match the columns
-            # and insert record into table
+            # and insert as record into table
             with open(self.path_to_file) as f:
                 for line in f.readlines():
                     values = []
@@ -86,17 +86,31 @@ class DataFormat(object):
                         values.append(value.strip())
                         index = width
 
-                        try:
-                            self.db.insert(insert_string, self.spec.file_name,
-                                           values)
-                        except (Exception, psycopg2.DatabaseError) as error:
-                            LOG.error(error)
+                    try:
+                        self.db.insert(insert_string, self.spec.file_name,
+                                       values)
+                    except psycopg2.DatabaseError as error:
+                        LOG.error('_add_rows_to_data_format_table ' +
+                                  str(error))
 
         else:
             raise DataFormatException('Invalid specification; cannot add ' +
                                       'data format rows')
 
     def _get_create_sql_string_given_columns(self, columns):
+        """
+            Puts together the intial CREATE TABLE string with
+            the column names and corresponding data types included,
+            but with the table name left blank to safely inject
+            in later
+
+        Args:
+            columns (list): List of column tuples
+        Returns:
+            create_string, ex. 'CREATE TABLE {}
+                                valid BOOLEAN,
+                                count INT);'
+        """
         create_string = 'CREATE TABLE {} ('
 
         columns_string = ''
@@ -110,6 +124,17 @@ class DataFormat(object):
         return create_string
 
     def _get_insert_sql_string_given_columns(self, columns):
+        """
+            Puts together the intial INSERT INTO string with
+            the appropriate number of %s values for string interpolation,
+            but with the table name left blank to safely inject in later
+
+       Args:
+            columns (list): List of column tuples
+        Returns:
+            insert_string, ex. 'INSERT INTO {}
+                                VALUES(%s, %s, %S);'
+        """
         insert_string = 'INSERT INTO {} VALUES ('
 
         for c in range(len(columns) - 1):

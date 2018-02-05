@@ -4,7 +4,9 @@ from psycopg2 import DatabaseError
 
 
 def create_tables():
-    """ create tables in the PostgreSQL database"""
+    """ Create tables in the Postgres database necessary
+        for the file parser to run
+    """
     commands = (
         """
         CREATE TABLE specification_formats (
@@ -34,7 +36,7 @@ def create_tables():
 
         cur.close()
         conn.commit()
-    except (Exception, DatabaseError) as error:
+    except DatabaseError as error:
         print error
     finally:
         if conn is not None:

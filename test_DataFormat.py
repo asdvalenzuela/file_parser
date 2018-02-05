@@ -1,11 +1,11 @@
 from DataFormat import DataFormat
 from DataFormat import DataFormatException
-from FilesDB import FilesDB
+from FilesDBWrapper import FilesDBWrapper
 from Specification import Specification
 
-import unittest
-import testing.postgresql
 import psycopg2
+import testing.postgresql
+import unittest
 
 
 def handler(postgresql):
@@ -50,7 +50,7 @@ class SpecificationTest(unittest.TestCase):
 
         spec_file_name = 'fileformat1'
         path_to_data_file = 'test/fileformat1_2015-06-28.txt'
-        self.db = FilesDB(test=True)
+        self.db = FilesDBWrapper(test=True)
         self.db._connection = psycopg2.connect(**self.postgresql.dsn())
         self.spec = Specification(spec_file_name, self.db)
         self.data_format = DataFormat(self.spec, self.db, path_to_data_file)

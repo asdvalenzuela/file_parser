@@ -5,12 +5,12 @@ def get_postgres_config(filename='database.ini', section='postgresql'):
     """
         Parse postgres config from formatted ini file
         Args:
-            filename (str): Name of ini file to parse, defaults to database.ini
-            section (str): Section name of file to parse as postgres config
+            filename (str): Name of ini file to parse, defaults to
+                'database.ini'
+            section (str): Section name of file to parse as postgres config,
+                defaults to 'postgresql'
         Returns:
-            list: list of adjacent coordinates
-            Example for coordinate (0,1):
-                [(0, 0), (1, 0), (1, 1)]
+            postgres_config (dict): param key to param value
     """
 
     parser = ConfigParser()

@@ -36,7 +36,7 @@ class FilesDBWrapper(object):
             params = get_postgres_config()
             conn = psycopg_connect(**params)
             return conn
-        except(Exception, DatabaseError) as error:
+        except DatabaseError as error:
             LOG.error(error)
 
     def query_and_get_id(self, query, params=None):

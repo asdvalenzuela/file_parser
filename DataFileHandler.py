@@ -10,8 +10,10 @@ LOG = logging.getLogger(__name__)
 
 class DataFileHandler(FileSystemEventHandler):
     """
-        Takes data file created events dispatched by the observer and
-        processes those events.
+        Takes data file 'created' events dispatched by the observer and
+        processes those events, finding a corresponding specification format
+        in the database, applying that format to the data, and loading the
+        data into the database
     """
     patterns = ["*.txt"]
 
